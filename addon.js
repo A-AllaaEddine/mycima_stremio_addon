@@ -8,7 +8,25 @@ const manifest = {
 	"catalogs": [
 		{
 			"type": "movie",
-			"id": "top"
+			"id": ""
+		},
+		{
+			"type": "movie",
+			"id": "top",
+			"extra":
+            [{
+                    "name": "search",
+                    "isRequired": true
+                }
+            ]
+		},
+		{
+			"type": "movie",
+			"id": "best"
+		},
+		{
+			"type": "movie",
+			"id": "old"
 		}
 	],
 	"resources": [
@@ -39,15 +57,22 @@ builder.defineCatalogHandler((args) => {
 	
 })
 
-builder.defineMetaHandler(({type, id}) => {
-	console.log("request for meta: "+type+" "+id)
-	// Docs: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/requests/defineMetaHandler.md
-	return Promise.resolve({ meta: null })
+
+builder.defineMetaHandler((args) => {
+	console.log("request for meta: "+args.type+" "+args.id);
+	if (args.type === "movie"){
+		return Promise.resolve(index.meta(args.type, args.id))
+		.then((meta) => ({meta : meta}));
+	}
+	else {
+		return Promise.resolve({ meta : null});
+	}
 })
 
+
+
 builder.defineStreamHandler(({type, id}) => {
-	console.log("request for streams: "+type+" "+id)
-	// Docs: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/requests/defineStreamHandler.md
+	console.log("request for streams: "+type+" "+id);
 	if (type === "movie" && id === "tt1254207") {
 		// serve one stream to big buck bunny
 		const stream = { url: "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4" }

@@ -39,24 +39,23 @@ async function catalog (type, id) {
             else if (id === 'top') {
                 var URL = `${Host}/movies/top`;
             }
+            
             var res = encodeURI(URL);
             let promise = (await axios.get(res)).data;
             let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
             //console.log(parsed);
-            let metas = [];
-            parsed.forEach( (movie) => {
-                //const released: {movie.querySelector('.year')!= null ? movie.querySelector('.year').rawText : null};
-                metas = {
-                    id: movie.rawAttributes['cpd'],
-                    title : movie.querySelector('a').rawAttributes['title'],
-                    released: movie.querySelector('.year').rawText,
-                    thumbnail : movie.querySelector('.BG--GridItem').rawAttributes['data-lazy-style'],
+            return parsed.map( (movie) => {
+                return {
+                    id: movie.querySelector('a').rawAttributes['title'].toString(),
+                    type: 'movie',
+                    title : movie.querySelector('a').rawAttributes['title'].toString(),
+                    released: movie.querySelector('.year').rawText.toString(),
+                    poster : movie.querySelector('.BG--GridItem').rawAttributes['data-lazy-style'].replace(/\(|\)|;|--image:url/g, ''),
                 }
                 
-                console.log(metas);
             })
 
-            return metas;
+            //return metas;
         }
     }
     catch(error) {
@@ -64,10 +63,66 @@ async function catalog (type, id) {
     }
 }
 
-catalog('movie', 'top');
+//catalog('movie', 'top');
+
+async function meta (type, id) {
+    if (type === 'movie'){
+        var URL = `${Host}/watch/${id.replace(/ /g, '-')}`;
+    }
+    //console.log(URL);
+    var res = encodeURI(URL);
+    let promise = (await axios.get(res)).data;
+    let parsed = parser.parse(promise);
+
+
+    let title = parsed.querySelector('.Title--Content--Single-begin').querySelector('h1').rawText.toString();
+    let tyPe = type;
+    let description = parsed.querySelector('.StoryMovieContent').rawText.toString();
+
+    let bg = parsed.querySelector('.separated--top').rawAttributes['data-lazy-style'].replace(/\(|\)|;|--img:url/g, '');
+    
+    //console.log(bg);
+
+    let genres = parsed.querySelector('.Terms--Content--Single-begin').querySelectorAll('a')
+    .map( (genre) => { 
+        return genre.rawAttributes['href'].toString();})
+    .map(gen => {
+        if (gen.includes('genre')){
+            let test = gen.split('-');
+            return test[1].replace(/\//g, '').toString();
+        }
+    });
+
+    let genre = [];
+    
+    genre = genres.filter( (elem) => {
+        return elem !== undefined;
+    })
+
+    //console.log(genre);
+    return metaObj ={
+        id: id,
+        name: title,
+        posterShape: 'poster',
+        type: tyPe,
+        genre: genre,
+        poster: bg,
+        background: bg,
+        description: description
+    }
+
+
+
+    //console.log(metaObj);
+}
+
+
+//meta ('movie', 'مشاهدة-فيلم-ginny-weds-sunny-2020-مترجم')
+
 
 module.exports = {
     axiosData,
     search,
-    catalog
+    catalog,
+    meta
 };
