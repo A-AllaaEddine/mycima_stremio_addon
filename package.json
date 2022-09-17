@@ -1,0 +1,13 @@
+{
+	"name": "stremio-addon-CimaClubAddon",
+	"version": "0.0.1",
+	"description": "an Addon for Cima-Club.bar",
+	"scripts": {
+		"start": "node server.js"
+	},
+	"dependencies": {
+		"axios": "^0.27.2",
+		"fast-html-parser": "^1.0.1",
+		"stremio-addon-sdk": "1.1.x"
+	}
+}
