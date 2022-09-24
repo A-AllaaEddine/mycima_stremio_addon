@@ -18,19 +18,36 @@ async function axiosData() {
 
 async function search(type, query) {
     try{
-        let URL = `${Host}/search/${query}`;
+        let Query = query.replace(/\s/g,'-').toString()
+        let URL = `${Host}/search/${Query[0].toUpperCase()+ Query.slice(1).toLowerCase()}`;
         //console.log(URL);
-        const  promise = await axios.get(URL);
-        const parsed  =parser.parse(promise.data);
-        const links = parsed.querySelectorAll('.fullClick');
-        //console.log(links)
+        var res = encodeURI(URL);
+        const  promise = (await axios.get(res)).data;
+        let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
+        if (type === 'movie') {
+            return parsed.map( (movie) => {
+                let cat = {
+                    id: movie.querySelector('a').rawAttributes['title'].toString(),
+                    type: 'movie',
+                    title : movie.querySelector('a').rawAttributes['title'].toString(),
+                    poster : movie.querySelector('.BG--GridItem').rawAttributes['data-lazy-style'].replace(/\(|\)|;|--image:url/g, ''),
+                }
+                if (movie.querySelector('.year')) {
+                    cat.released = movie.querySelector('.year').rawText.toString();
+                }
+                return cat;
+                
+            })
+        }
     }
     catch(error) {
         console.log(error);
     }
 }
 
-//const metas = [];
+
+//search('movie', 'avengers');
+
 async function catalog (type, id) {
     try {
         if(type === 'movie') {
@@ -65,7 +82,6 @@ async function catalog (type, id) {
                 
             })
 
-            //return metas;
         }
     }
     catch(error) {
@@ -99,7 +115,10 @@ async function meta (type, id) {
     .map(gen => {
         if (gen.includes('genre')){
             let test = gen.split('-');
-            return test[1].replace(/\//g, '').toString();
+            //console.log(test[1]);
+            if (test[1]){
+                return test[1].replace(/\//g, '').toString();
+            }
         }
     });
 
@@ -109,7 +128,7 @@ async function meta (type, id) {
         return elem !== undefined;
     })
 
-    //console.log(genre);
+    console.log(genre);
     return metaObj ={
         id: id,
         name: title,
@@ -127,7 +146,7 @@ async function meta (type, id) {
 }
 
 
-//meta ('movie', 'مشاهدة-فيلم-ginny-weds-sunny-2020-مترجم')
+//meta ('movie', 'مشاهدة-فيلم-sharmaji-namkeen-2022-مترجم')
 
 
 
@@ -138,67 +157,21 @@ async function stream (type, id) {
     //console.log(URL);
     var res = encodeURI(URL);
     let promise = (await axios.get(res)).data;
-    let parsed = parser.parse(promise);
-    let URLs = parsed.querySelector('.WatchServersList').querySelectorAll('btn');
-    //console.log(URLs);
+    let parsed = parser.parse(promise).querySelector('.List--Download--Mycima--Single').querySelectorAll('a');
+    //console.log(parsed);
 
-    var urls = [];
-    urls = URLs.map(url => {
-        let htmlResLink = url.rawAttributes['data-url'].toString();
-        return {
-            url: htmlResLink,
-            name: url.querySelector('strong').rawText.toString()
-        };
-        
-    })
-    //console.log(urls);
-    let Links;
-    
-    for (i = 0; i < urls.length; i++) {
-        if (urls[i].name === 'uqload.com'){
-            var link1;
-            let prom = (await axios.get(urls[i].url)).data;
-            let parsed = parser.parse(prom, {script: true});
-            let url = parsed.querySelectorAll('script');
-            url.map( scr => {
-                let children = scr.rawText;
-                var expression = /(https?:\/\/(?:www\.|(?!www))[^\s\.]+\.[^\s]{2,}|www\.[^\s]+\.[^\s]{2,})mp4/gi;
-                var match = children.match(expression);
-                if (match) {
-                    link1 = {
-                        url: match.toString().replace(/[\[\]']+/g, ''),
-                        name: urls[i].name.toString(),
-                        behaviorHints:{
-                            notWebReady: true,
-                            proxyHeaders:{ "request": { "Referer": "https://uqload.com/" , "Sec-Fetch-Mode": "no-cors" } }}
-                    }
-                    //console.log(link1);
-                }
-                //console.log(match);
-            })
+    return parsed.map( stream => {
+        return Url = {
+            url: stream.rawAttributes['href'],
+            name: stream.querySelector('resolution').rawText
         }
 
-        Links = [
-            link1
-        ];
-    }
-    
-    //console.log(Links);
-    return Links
-
-    
-    //return URLs.map(url => {
-    //     return { 
-    //         url : url.rawAttributes['data-url'].toString(),
-    //         name: url.querySelector('strong').rawText.toString(),
-    //     }
-    //})
-    
+    })
 }
 
 
 
-//stream('movie', 'مشاهدة-فيلم-ginny-weds-sunny-2020-مترجم');
+//stream('movie', 'مشاهدة-فيلم-avengers-infinity-war-2018-مترجم');
 
 
 module.exports = {
