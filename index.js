@@ -18,27 +18,33 @@ async function axiosData() {
 
 async function search(type, query) {
     try{
-        let Query = query.replace(/\s/g,'-').toString()
-        let URL = `${Host}/search/${Query[0].toUpperCase()+ Query.slice(1).toLowerCase()}`;
-        //console.log(URL);
+        let Query = query.replace(/\s/g,'+').toString();
+        if (type == 'movie ') {
+            URL = `${Host}/search/${Query}`;
+        }
+        else if (type == 'series') {
+            URL = `${Host}/search/${Query}/list/series/`;
+        }
+        
         var res = encodeURI(URL);
         const  promise = (await axios.get(res)).data;
         let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
-        if (type === 'movie') {
+
             return parsed.map( (movie) => {
-                let cat = {
-                    id: movie.querySelector('a').rawAttributes['title'].toString(),
-                    type: 'movie',
-                    title : movie.querySelector('a').rawAttributes['title'].toString(),
-                    poster : movie.querySelector('.BG--GridItem').rawAttributes['data-lazy-style'].replace(/\(|\)|;|--image:url/g, ''),
+                if (movie) {
+                    let cat = {
+                        id: movie.querySelector('a').rawAttributes['title'].toString(),
+                        type: type,
+                        title : movie.querySelector('a').rawAttributes['title'].toString(),
+                        poster : movie.querySelector('.BG--GridItem').rawAttributes['data-lazy-style'].replace(/\(|\)|;|--image:url/g, ''),
+                    }
+                    if (movie.querySelector('.year')) {
+                        cat.released = movie.querySelector('.year').rawText.toString();
+                    }
+                    return cat;
                 }
-                if (movie.querySelector('.year')) {
-                    cat.released = movie.querySelector('.year').rawText.toString();
-                }
-                return cat;
                 
             })
-        }
     }
     catch(error) {
         console.log(error);
@@ -46,7 +52,7 @@ async function search(type, query) {
 }
 
 
-//search('movie', 'avengers');
+//search('', 'the blacklist');
 
 async function catalog (type, id) {
     try {
