@@ -50,7 +50,9 @@ async function search(type, query) {
 
 async function catalog (type, id) {
     try {
+        let Type;
         if(type === 'movie') {
+            Type = type;
             if (id === "MCmovies-New"){
                 var URL = `${Host}/movies`;
             }
@@ -64,32 +66,49 @@ async function catalog (type, id) {
                 var URL = `${Host}/movies/top`;
             }
             
-            var res = encodeURI(URL);
+            
+
+        }
+        else if (type === 'series') {
+            Type = type;
+            if (id === "MCseries-New"){
+                var URL = `${Host}/seriestv/new`;
+            }
+            else if (id === "MCseries-Best"){
+                var URL = `${Host}/seriestv/best`;
+            }
+            else if (id === "MCseries-Old") {
+                var URL = `${Host}/seriestv/old`;
+            }
+            else if (id === "MCseries-Top") {
+                var URL = `${Host}/seriestv/top`;
+            }
+        }
+        var res = encodeURI(URL);
             let promise = (await axios.get(res)).data;
             let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
             //console.log(parsed);
             return parsed.map( (movie) => {
                 let cat = {
                     id: movie.querySelector('a').rawAttributes['title'].toString(),
-                    type: 'movie',
+                    type: Type,
                     title : movie.querySelector('a').rawAttributes['title'].toString(),
                     poster : movie.querySelector('.BG--GridItem').rawAttributes['data-lazy-style'].replace(/\(|\)|;|--image:url/g, ''),
                 }
                 if (movie.querySelector('.year')) {
                     cat.released = movie.querySelector('.year').rawText.toString();
                 }
+                //console.log(cat);
                 return cat;
                 
             })
-
-        }
     }
     catch(error) {
         console.log(error);
     }
 }
 
-//catalog('movie', 'top');
+//catalog('series', 'MCseries-New');
 
 async function meta (type, id) {
     if (type === 'movie'){

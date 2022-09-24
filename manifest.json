@@ -32,25 +32,49 @@
 
 		"id": "MCmovies-New",
 
-		"name": "Mycima New"
+		"name": "Mycima New Movies"
 	},{
 		"type": "movie",
 
 		"id": "MCmovies-Top",
 
-		"name": "Mycima Top"
+		"name": "Mycima Top Movies"
 	},{
 		"type": "movie",
 
 		"id": "MCmovies-Best",
 
-		"name": "Mycima Best"
+		"name": "Mycima Best Movies"
 	},{
 		"type": "movie",
 
 		"id": "MCmovies-Old",
 
-		"name": "Mycima Old"
+		"name": "Mycima Old Movies"
+	},{
+		"type": "series",
+
+		"id": "MCseries-New",
+
+		"name": "Mycima New Series"
+	},{
+		"type": "series",
+
+		"id": "MCseries-Top",
+
+		"name": "Mycima Top Series"
+	},{
+		"type": "series",
+
+		"id": "MCseries-Best",
+
+		"name": "Mycima Best Series"
+	},{
+		"type": "series",
+
+		"id": "MCseries-Old",
+
+		"name": "Mycima Old Series"
 	}
 ],
 	"resources": [
