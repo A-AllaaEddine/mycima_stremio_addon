@@ -2,45 +2,7 @@ const { addonBuilder } = require("stremio-addon-sdk")
 const index= require('./index');
 
 // Docs: https://github.com/Stremio/stremio-addon-sdk/blob/master/docs/api/responses/manifest.md
-const manifest = {
-	"id": "community.CimaClubAddon",
-	"version": "0.0.1",
-	"catalogs": [
-		{
-			"type": "movie",
-			"id": ""
-		},
-		{
-			"type": "movie",
-			"id": "top",
-			"extra":
-            [{
-                    "name": "search",
-                    "isRequired": true
-                }
-            ]
-		},
-		{
-			"type": "movie",
-			"id": "best"
-		},
-		{
-			"type": "movie",
-			"id": "old"
-		}
-	],
-	"resources": [
-		"catalog",
-		"stream",
-		"meta"
-	],
-	"types": [
-		"movie",
-		"series"
-	],
-	"name": "CimaClubAddon",
-	"description": "an Addon for Cima-Club.bar"
-}
+const manifest = require('./manifest.json');
 const builder = new addonBuilder(manifest)
 
 builder.defineCatalogHandler((args) => {
@@ -71,16 +33,15 @@ builder.defineMetaHandler((args) => {
 
 
 
-builder.defineStreamHandler(({type, id}) => {
-	console.log("request for streams: "+type+" "+id);
-	if (type === "movie" && id === "tt1254207") {
-		// serve one stream to big buck bunny
-		const stream = { url: "http://distribution.bbb3d.renderfarming.net/video/mp4/bbb_sunflower_1080p_30fps_normal.mp4" }
-		return Promise.resolve({ streams: [stream] })
+builder.defineStreamHandler((args) => {
+	console.log("request for streams: "+args.type+" "+args.id);
+	if (args.type === "movie") {
+		return Promise.resolve(index.stream(args.type,args.id))
+		.then((streams) => ({  streams: streams}));
+	}else {
+		console.log('stream reject');
+  		return Promise.resolve({ streams: [] });
 	}
-
-	// otherwise return no streams
-	return Promise.resolve({ streams: [] })
 })
 
 module.exports = builder.getInterface()

@@ -1,0 +1,67 @@
+{
+	"id": "community.CimaClubAddon",
+	"version": "0.0.1",
+	"catalogs": [{
+		"type": "movie",
+
+		"id": "MCmovies",
+
+		"name": "Mycima movies",
+
+		"extra":
+		[{
+				"name": "search",
+				"isRequired": true
+			}
+		]
+	}, {
+		"type": "series",
+
+		"id": "MCseries",
+
+		"name": "Mycima series",
+
+		"extra":
+		[{
+				"name": "search",
+				"isRequired": true
+			}
+		]
+	},{
+		"type": "movie",
+
+		"id": "MCmovies-New",
+
+		"name": "Mycima New"
+	},{
+		"type": "movie",
+
+		"id": "MCmovies-Top",
+
+		"name": "Mycima Top"
+	},{
+		"type": "movie",
+
+		"id": "MCmovies-Best",
+
+		"name": "Mycima Best"
+	},{
+		"type": "movie",
+
+		"id": "MCmovies-Old",
+
+		"name": "Mycima Old"
+	}
+],
+	"resources": [
+		"catalog",
+		"stream",
+		"meta"
+	],
+	"types": [
+		"movie",
+		"series"
+	],
+	"name": "CimaClubAddon",
+	"description": "an Addon for Cima-Club.bar"
+}
