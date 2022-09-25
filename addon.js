@@ -22,12 +22,17 @@ builder.defineCatalogHandler((args) => {
 
 builder.defineMetaHandler((args) => {
 	console.log("request for meta: "+args.type+" "+args.id);
-	if (args.type === "movie"){
+	if (args.type == 'movie'){
+		return Promise.resolve(index.meta(args.type, args.id))
+		.then((meta) => ({meta : meta}));
+	}
+	else if (args.type == 'series'){
 		return Promise.resolve(index.meta(args.type, args.id))
 		.then((meta) => ({meta : meta}));
 	}
 	else {
-		return Promise.resolve({ meta : null});
+		console.log('meta reject');
+		return Promise.resolve({ meta : [] });
 	}
 })
 
@@ -35,10 +40,15 @@ builder.defineMetaHandler((args) => {
 
 builder.defineStreamHandler((args) => {
 	console.log("request for streams: "+args.type+" "+args.id);
-	if (args.type === "movie") {
+	if (args.type == 'movie') {
 		return Promise.resolve(index.stream(args.type,args.id))
 		.then((streams) => ({  streams: streams}));
-	}else {
+	}
+	// else if (args.type == 'series') {
+	// 	return Promise.resolve(index.stream(args.type,args.id))
+	// 	.then((streams) => ({  streams: streams}));
+	// }
+	else {
 		console.log('stream reject');
   		return Promise.resolve({ streams: [] });
 	}
