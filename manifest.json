@@ -1,6 +1,12 @@
 {
-	"id": "community.CimaClubAddon",
+	"id": "community.mycima",
 	"version": "0.0.1",
+	"name": "MyCima by LazyDev",
+    "description": "Addon for Streaming from MyCima by LazyDev",
+    "logo": "https://mycimaa.tube/wp-content/uploads/2019/11/favicon-1.jpg",
+	"background":"https://raw.githubusercontent.com/Stremio/stremio-art/main/originals/Gladyz%20Pagaduan.jpg",
+    "github": "https://github.com/A-AllaaEddine",
+	
 	"catalogs": [{
 		"type": "movie",
 
@@ -85,7 +91,5 @@
 	"types": [
 		"movie",
 		"series"
-	],
-	"name": "CimaClubAddon",
-	"description": "an Addon for Cima-Club.bar"
+	]
 }

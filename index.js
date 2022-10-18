@@ -93,10 +93,10 @@ async function catalog (type, id) {
         var res = encodeURI(URL);
             let promise = (await axios.get(res)).data;
             let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
-            //console.log(parsed);
+            // console.log(parsed);
             return parsed.map( (movie) => {
                 let cat = {
-                    id: movie.querySelector('a').rawAttributes['title'].toString(),
+                    id: movie.querySelector('a').rawAttributes['href'].toString(),
                     type: Type,
                     title : movie.querySelector('a').rawAttributes['title'].toString(),
                     poster : movie.querySelector('.BG--GridItem').rawAttributes['data-lazy-style'].replace(/\(|\)|;|--image:url/g, ''),
@@ -104,7 +104,7 @@ async function catalog (type, id) {
                 if (movie.querySelector('.year')) {
                     cat.released = movie.querySelector('.year').rawText.toString();
                 }
-                //console.log(cat);
+                // console.log(cat);
                 return cat;
                 
             })
@@ -114,29 +114,22 @@ async function catalog (type, id) {
     }
 }
 
-//catalog('series', 'MCseries-New');
+// catalog('series', 'MCseries-New');
 
 async function meta (type, id) {
+
     if (type === 'movie'){
-        var URL = `${Host}/watch/${id.replace(/ /g, '-')}`;
+        var URL = id;
     }
     if (type == 'series') {
         let id1 = 'مسلسل';
         try {
-            var URL = `${Host}/series/${id.replace(/\s/g, '-')}`;
+            var URL = id;
             // console.log(URL)
             var res = encodeURI(URL);
             let promise = (await axios.get(res)).data;
-        }catch {
-            try {
-                URL = `${Host}/series/${id1}-${id.replace(/\s/g, '-')}`;
-                // console.log("2nd", URL);
-                var res = encodeURI(URL);
-                let promise = (await axios.get(res)).data;
-
-            }catch(error) {
-                console.log(error);
-            }
+        }catch (error) {
+            console.log(error);
             
         }
         
@@ -148,11 +141,12 @@ async function meta (type, id) {
     let promise = (await axios.get(res)).data;
     let parsed = parser.parse(promise);
 
+    // console.log(parsed);
     var description;
     var bg;
 
     let title = parsed.querySelector('.Title--Content--Single-begin').querySelector('h1').rawText.toString();
-    
+    // console.log(title);
     if (type == 'movie') {
         description = parsed.querySelector('.StoryMovieContent').rawText.toString();
         bg = parsed.querySelector('.separated--top').rawAttributes['data-lazy-style'].toString().replace(/\(|\)|;|--img:url/g, '');
@@ -168,16 +162,16 @@ async function meta (type, id) {
 
     let genres = parsed.querySelector('.Terms--Content--Single-begin').querySelectorAll('a')
     .map( (genre) => { 
-        return genre.rawAttributes['href'].toString();})
-    .map(gen => {
-        if (gen.includes('genre')){
-            let test = gen.split('-');
-            //console.log(test[1]);
-            if (test[1]){
-                return test[1].replace(/\//g, '').toString();
-            }
-        }
-    });
+        return genre.rawText.toString();})
+    // .map(gen => {
+    //     if (gen.includes('genre')){
+    //         let test = gen.split('-');
+    //         //console.log(test[1]);
+    //         if (test[1]){
+    //             return test[1].replace(/\//g, '').toString();
+    //         }
+    //     }
+    // });
 
     
 
@@ -205,7 +199,9 @@ async function meta (type, id) {
         var seasons = await seasonlist(id);
     }
     if (type == 'series') {
-        metaObj.videos = seasons;
+        if (seasons) {
+            metaObj.videos = seasons;
+        }
     }
 
     // console.log(metaObj);
@@ -215,97 +211,103 @@ async function meta (type, id) {
 }
 
 
-// meta ('series', 'مسلسل Vikings');
+// meta ('series', 'https://mycimaa.makeup/series/midnight-at-pera-palace/');
 
 
 async function seasonlist(id) {
-    let id1 = 'مسلسل';
-    try {
-        var URL = `${Host}/series/${id1}-${id.replace(/ /g, '-')}`;
-        // console.log('1st',URL)
-        let res = encodeURI(URL);
-        let promise = (await axios.get(res)).data;
-    }catch(error) {
-        try {
-            URL = `${Host}/series/${id.replace(/ /g, '-')}`;
-            // console.log('2nd', URL);
-            let res = encodeURI(URL);
-            let promise = (await axios.get(res)).data;
 
-        }catch(error){
-            console.log(error);
+    try {
+        var  URL = id;
+        var res = encodeURI(URL);
+        var promise = (await axios.get(res)).data;
+        if (!promise) {
+            return;
         }
-        
+    } catch(error) {
+        return;
     }
 
     // console.log(URL)
     var res = encodeURI(URL);
     var promise = (await axios.get(res)).data;
     let parsed = parser.parse(promise);
-    // console.log(parsed);
-    var list = parsed.querySelector('.List--Seasons--Episodes').querySelectorAll('a');
+    var seasonsEpisodes = parsed.querySelector('.Seasons--Episodes');
 
-    // console.log(list.length);
     var seasonarray =  [];
-    for (i = 0; i < list.length; i++) {
-        //let test = list[i].querySelector('a').rawText.split(' ');
-        let seasonId = i+1;
-        let id2 = 'موسم';
-        let id3 = 'مشاهدة';
-        let id4 = 'حلقة'
+
+    try {
         
-        try {
+        if (seasonsEpisodes.querySelector('.List--Seasons--Episodes')) {
+            var seasonsList = seasonsEpisodes.querySelector('.List--Seasons--Episodes').querySelectorAll('a');
             
-            var epsurl = `${Host}/series/${id.replace(/\s/g, '-')}-${id2}-${seasonId}`;
-            let epsurlURI = encodeURI(epsurl);
-            // console.log(epsurl);
-            var eps = (await axios.get(epsurlURI)).data;
-        }catch(error) {
-            try {
-                epsurl = `${Host}/series/${id2}-${seasonId}-${id1}-${id.replace(/ /g, '-')}`;
+            for (i = 0; i < seasonsList.length; i++) {
+               
+                var seasonUrl = seasonsList[i].rawAttributes['href'];
+                var seasonData = (await axios.get(seasonUrl)).data;
+        
                 // console.log(epsurl);
-                epsurlURI = encodeURI(epsurl);
-                eps = (await axios.get(epsurlURI)).data;
-            
-            }catch(error){
-                console.log(error);
-            }
-            
-        }
-        // console.log(epsurl);
-
         
-
-        let pars = parser.parse(eps);
-        var eplist = pars.querySelector('.Episodes--Seasons--Episodes').querySelectorAll('a');
-
-        //eplist.map( srs => console.log(srs));
-        eplist.reverse();
-
-        for (j = 0; j < eplist.length; j++) {
-            let epId = j+1;
-            var epurl = eplist[j].rawAttributes['href'];
-            var test = epurl.split('-');
-            let Url = (await axios.get(epurl)).data;
-            let epParsed = parser.parse(Url);
-            // console.log(epurl);
-            let epTitle = epParsed.querySelector('.Title--Content--Single-begin').querySelector('h1').rawText.toString();
-            // console.log(epTitle);
-            seasonarray.push({
-                id: epTitle,
-                name: epTitle,
-                season: i+1,
-                episode: j+1,
-                available: true
-            })
-            
+                let pars = parser.parse(seasonData);
+                 var eplist = pars.querySelector('.Episodes--Seasons--Episodes').querySelectorAll('a');
+        
+                eplist.reverse();
+        
+                for (j = 0; j < eplist.length; j++) {
+                    var epUrl = eplist[j].rawAttributes['href'];
+                    var epData =  (await axios.get(epUrl)).data;
+                    let edDataParsed = parser.parse(epData);
+        
+                    let epTitle = edDataParsed.querySelector('.Title--Content--Single-begin').querySelector('h1').rawText.toString();
+        
+                    seasonarray.push({
+                        id: epTitle,
+                        name: epTitle,
+                        season: i+1,
+                        episode: j+1,
+                        available: true
+                    })
+        
+                }
+        
+                }
+    
         }
-    }
-    return seasonarray;
+         else if (!seasonsList) {
+            var eplist = parsed.querySelector('.Episodes--Seasons--Episodes').querySelectorAll('a');
+        
+                eplist.reverse();
+        
+                for (j = 0; j < eplist.length; j++) {
+                    var epUrl = eplist[j].rawAttributes['href'];
+                    var epData =  (await axios.get(epUrl)).data;
+                    let edDataParsed = parser.parse(epData);
+        
+                    let epTitle = edDataParsed.querySelector('.Title--Content--Single-begin').querySelector('h1').rawText.toString();
+        
+                    seasonarray.push({
+                        id: epTitle,
+                        name: epTitle,
+                        season: 1,
+                        episode: j+1,
+                        available: true
+                    })
+         }
+        }
+    } catch( error) {
+        console.log(error);
+     }
+
+
+    
+
+    
     // console.log(seasonarray);
+    return seasonarray;
 
 }
 
+
+// seasonlist('https://mycimaa.makeup/series/loki/');
 
 async function stream (type, id) {
     if (type === 'movie'){

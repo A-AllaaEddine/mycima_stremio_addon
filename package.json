@@ -1,7 +1,7 @@
 {
-	"name": "stremio-addon-CimaClubAddon",
+	"name": "stremio-addon-mycimaaddon",
 	"version": "0.0.1",
-	"description": "an Addon for Cima-Club.bar",
+	"description": "an Addon for MyCima.fun",
 	"scripts": {
 		"start": "node server.js"
 	},
