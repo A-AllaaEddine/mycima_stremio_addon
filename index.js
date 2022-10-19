@@ -17,42 +17,62 @@ async function axiosData() {
 } 
 
 async function search(type, query) {
-    try{
-        let Query = query.replace(/\s/g,'+').toString();
-        if (type == 'movie ') {
-            URL = `${Host}/search/${Query}`;
+
+    if (type === 'movie') {
+        try {
+            var URL = `${Host}/search/${query.replace(/\s/g, '+')}`;
+            var res = encodeURI(URL);
+            let promise = (await axios.get(res)).data;
+            var link = res;
+        }catch(error) {
+            try {
+                let promise = (await axios.get(URL)).data;
+                var link = URL;
+            }catch(error) {
+                console.log(error);
+            }
         }
-        else if (type == 'series') {
-            URL = `${Host}/search/${Query}/list/series/`;
+    }
+    else if (type === 'series'){
+        try {
+            var URL = `${Host}/search/${query.replace(/\s/g, '+')}/list/series/`;
+            var res = encodeURI(URL);
+            let promise = (await axios.get(res)).data;
+            var link = res;
+        }catch(error) {
+            try {
+                let promise = (await axios.get(URL)).data;
+                var link = URL;
+            }catch(error) {
+                console.log(error);
+            }
         }
         
-        var res = encodeURI(URL);
-        const  promise = (await axios.get(res)).data;
-        let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
+    }
+        
+    var  promise = (await axios.get(link)).data;
+    let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
 
-            return parsed.map( (movie) => {
-                if (movie) {
-                    let cat = {
-                        id: movie.querySelector('a').rawAttributes['title'].toString(),
-                        type: type,
-                        title : movie.querySelector('a').rawAttributes['title'].toString(),
-                        poster : movie.querySelector('.BG--GridItem').rawAttributes['data-lazy-style'].replace(/\(|\)|;|--image:url/g, ''),
-                    }
-                    if (movie.querySelector('.year')) {
-                        cat.released = movie.querySelector('.year').rawText.toString();
-                    }
-                    return cat;
+        return parsed.map( (movie) => {
+            if (movie) {
+                let cat = {
+                    id: movie.querySelector('a').rawAttributes['href'].toString(),
+                    type: type,
+                    title : movie.querySelector('a').rawAttributes['title'].toString(),
+                    poster : movie.querySelector('.BG--GridItem').rawAttributes['data-lazy-style'].replace(/\(|\)|;|--image:url/g, ''),
                 }
-                
-            })
-    }
-    catch(error) {
-        console.log(error);
-    }
+                if (movie.querySelector('.year')) {
+                    cat.released = movie.querySelector('.year').rawText.toString();
+                }
+                // console.log(cat);
+                return cat;
+            }
+            
+        })
 }
 
 
-//search('', 'the blacklist');
+// search('series', 'game of thrones');
 
 async function catalog (type, id) {
     try {
