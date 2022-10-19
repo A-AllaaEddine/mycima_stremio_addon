@@ -5,7 +5,7 @@
     "description": "Addon for Streaming from MyCima by LazyDev",
     "logo": "https://mycimaa.tube/wp-content/uploads/2019/11/favicon-1.jpg",
 	"background":"https://raw.githubusercontent.com/Stremio/stremio-art/main/originals/Gladyz%20Pagaduan.jpg",
-    "github": "https://github.com/A-AllaaEddine",
+    "contactEmail": "a.allaaeddine.riad@gmail.com",
 	
 	"catalogs": [{
 		"type": "movie",

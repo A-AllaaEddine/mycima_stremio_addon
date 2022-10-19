@@ -44,6 +44,10 @@ builder.defineStreamHandler((args) => {
 		return Promise.resolve(index.stream(args.type,args.id))
 		.then((streams) => ({  streams: streams}));
 	}
+	else if (args.type == 'series'){
+		return Promise.resolve(index.stream(args.type,args.id))
+		.then((streams) => ({  streams: streams}));
+	}
 	// else if (args.type == 'series') {
 	// 	return Promise.resolve(index.stream(args.type,args.id))
 	// 	.then((streams) => ({  streams: streams}));

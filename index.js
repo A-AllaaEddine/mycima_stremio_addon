@@ -93,7 +93,6 @@ async function catalog (type, id) {
         var res = encodeURI(URL);
             let promise = (await axios.get(res)).data;
             let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
-            // console.log(parsed);
             return parsed.map( (movie) => {
                 let cat = {
                     id: movie.querySelector('a').rawAttributes['href'].toString(),
@@ -104,7 +103,6 @@ async function catalog (type, id) {
                 if (movie.querySelector('.year')) {
                     cat.released = movie.querySelector('.year').rawText.toString();
                 }
-                // console.log(cat);
                 return cat;
                 
             })
@@ -119,34 +117,50 @@ async function catalog (type, id) {
 async function meta (type, id) {
 
     if (type === 'movie'){
-        var URL = id;
+        try {
+            var URL = id;
+            var res = encodeURI(URL);
+            let promise = (await axios.get(res)).data;
+            var link = res;
+        }catch (error) {
+
+            try {
+                let promise = (await axios.get(URL)).data;
+                var link = URL;
+            }catch(error) {
+                console.log(error);
+            }
+            
+        }
     }
     if (type == 'series') {
         let id1 = 'مسلسل';
         try {
             var URL = id;
-            // console.log(URL)
             var res = encodeURI(URL);
             let promise = (await axios.get(res)).data;
+            var link = res;
         }catch (error) {
-            console.log(error);
+
+            try {
+                let promise = (await axios.get(URL)).data;
+                var link = URL;
+            }catch(error) {
+                console.log(error);
+            }
             
         }
         
     }
-    // console.log(URL);
     
     
-    var res = encodeURI(URL);
-    let promise = (await axios.get(res)).data;
+    let promise = (await axios.get(link)).data;
     let parsed = parser.parse(promise);
 
-    // console.log(parsed);
     var description;
     var bg;
 
     let title = parsed.querySelector('.Title--Content--Single-begin').querySelector('h1').rawText.toString();
-    // console.log(title);
     if (type == 'movie') {
         description = parsed.querySelector('.StoryMovieContent').rawText.toString();
         bg = parsed.querySelector('.separated--top').rawAttributes['data-lazy-style'].toString().replace(/\(|\)|;|--img:url/g, '');
@@ -157,21 +171,10 @@ async function meta (type, id) {
     }
     
 
-    
-    //console.log(bg);
 
     let genres = parsed.querySelector('.Terms--Content--Single-begin').querySelectorAll('a')
     .map( (genre) => { 
         return genre.rawText.toString();})
-    // .map(gen => {
-    //     if (gen.includes('genre')){
-    //         let test = gen.split('-');
-    //         //console.log(test[1]);
-    //         if (test[1]){
-    //             return test[1].replace(/\//g, '').toString();
-    //         }
-    //     }
-    // });
 
     
 
@@ -204,7 +207,6 @@ async function meta (type, id) {
         }
     }
 
-    // console.log(metaObj);
     return metaObj;
 
 
@@ -217,19 +219,22 @@ async function meta (type, id) {
 async function seasonlist(id) {
 
     try {
-        var  URL = id;
+        var URL = id;
         var res = encodeURI(URL);
-        var promise = (await axios.get(res)).data;
-        if (!promise) {
-            return;
+        let promise = (await axios.get(res)).data;
+        var link = res;
+    }catch (error) {
+
+        try {
+            let promise = (await axios.get(URL)).data;
+            var link = URL;
+        }catch(error) {
+            console.log(error);
         }
-    } catch(error) {
-        return;
+        
     }
 
-    // console.log(URL)
-    var res = encodeURI(URL);
-    var promise = (await axios.get(res)).data;
+    var promise = (await axios.get(link)).data;
     let parsed = parser.parse(promise);
     var seasonsEpisodes = parsed.querySelector('.Seasons--Episodes');
 
@@ -245,7 +250,6 @@ async function seasonlist(id) {
                 var seasonUrl = seasonsList[i].rawAttributes['href'];
                 var seasonData = (await axios.get(seasonUrl)).data;
         
-                // console.log(epsurl);
         
                 let pars = parser.parse(seasonData);
                  var eplist = pars.querySelector('.Episodes--Seasons--Episodes').querySelectorAll('a');
@@ -260,7 +264,7 @@ async function seasonlist(id) {
                     let epTitle = edDataParsed.querySelector('.Title--Content--Single-begin').querySelector('h1').rawText.toString();
         
                     seasonarray.push({
-                        id: epTitle,
+                        id: epUrl,
                         name: epTitle,
                         season: i+1,
                         episode: j+1,
@@ -285,10 +289,11 @@ async function seasonlist(id) {
                     let epTitle = edDataParsed.querySelector('.Title--Content--Single-begin').querySelector('h1').rawText.toString();
         
                     seasonarray.push({
-                        id: epTitle,
+                        id: epUrl,
                         name: epTitle,
                         season: 1,
                         episode: j+1,
+                        released: '2010-12-06T05:00:00.000Z',
                         available: true
                     })
          }
@@ -299,38 +304,80 @@ async function seasonlist(id) {
 
 
     
-
-    
-    // console.log(seasonarray);
     return seasonarray;
 
 }
 
 
-// seasonlist('https://mycimaa.makeup/series/loki/');
+// seasonlist('https://mycimaa.cfd/series/loki/');
 
 async function stream (type, id) {
     if (type === 'movie'){
-        var URL = `${Host}/watch/${id.replace(/ /g, '-')}`;
-    }
-    //console.log(URL);
-    var res = encodeURI(URL);
-    let promise = (await axios.get(res)).data;
-    let parsed = parser.parse(promise).querySelector('.List--Download--Mycima--Single').querySelectorAll('a');
-    //console.log(parsed);
+        try {
+            var URL = id;
+            var res = encodeURI(URL);
+            let promise = (await axios.get(res)).data;
+            var link = res;
+        }catch (error) {
 
-    return parsed.map( stream => {
-        return Url = {
-            url: stream.rawAttributes['href'],
-            name: stream.querySelector('resolution').rawText
+            try {
+                let promise = (await axios.get(URL)).data;
+                var link = URL;
+            }catch(error) {
+                console.log(error);
+            }
+            
         }
 
-    })
+        let promise = (await axios.get(link)).data;
+        let parsed = parser.parse(promise).querySelector('.List--Download--Mycima--Single').querySelectorAll('a');
+
+        var streamList =  parsed.map( stream => {
+            return {
+                url: stream.rawAttributes['href'],
+                name: stream.querySelector('resolution').rawText
+            }
+
+        })
+
+        return streamList;
+    }
+    else if (type === 'series') {
+
+        try {
+            var URL = id;
+            var res = encodeURI(URL);
+            let promise = (await axios.get(res)).data;
+            var link = res;
+        }catch (error) {
+
+            try {
+                let promise = (await axios.get(URL)).data;
+                var link = URL;
+            }catch(error) {
+                console.log(error);
+            }
+            
+        }
+        let promise = (await axios.get(link)).data;
+        let parsed = parser.parse(promise).querySelector('.List--Download--Mycima--Single').querySelectorAll('a');
+
+        var epStreamList =  parsed.map( stream => {
+            return  {
+                url: stream.rawAttributes['href'],
+                name: stream.querySelector('resolution').rawText
+            }
+
+        })
+
+        return epStreamList;
+    }
+    
 }
 
 
 
-//stream('movie', 'مشاهدة-فيلم-avengers-infinity-war-2018-مترجم');
+// stream('series', 'https://mycimaa.cfd/watch/%d9%85%d8%b4%d8%a7%d9%87%d8%af%d8%a9-%d9%85%d8%b3%d9%84%d8%b3%d9%84-pivoting-%d9%85%d9%88%d8%b3%d9%85-1-%d8%ad%d9%84%d9%82%d8%a9-1/');
 
 
 module.exports = {
