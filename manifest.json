@@ -36,51 +36,97 @@
 	},{
 		"type": "movie",
 
-		"id": "MCmovies-New",
+		"id": "MCmovies",
 
-		"name": "Mycima New Movies"
+		"name": "Mycima All Movies",
+		"extra": 
+		[{ 
+			"name": "genre", "isRequired": false, "options": ["New", "Old", "Best"] 
+		}]
 	},{
 		"type": "movie",
 
-		"id": "MCmovies-Top",
+		"id": "MCmovies-Arabic",
 
-		"name": "Mycima Top Movies"
+		"name": "Mycima Arabic Movies",
+
+		"extra": 
+		[{ 
+			"name": "genre", "isRequired": false, "options": ["New", "Old", "Best"] 
+		}]
 	},{
 		"type": "movie",
 
-		"id": "MCmovies-Best",
+		"id": "MCmovies-English",
 
-		"name": "Mycima Best Movies"
+		"name": "Mycima English Movies",
+
+		"extra": 
+		[{ 
+			"name": "genre", "isRequired": false, "options": ["New", "Old", "Best"] 
+		}]
 	},{
 		"type": "movie",
 
-		"id": "MCmovies-Old",
+		"id": "MCmovies-Indian",
 
-		"name": "Mycima Old Movies"
+		"name": "Mycima Indian Movies",
+
+		"extra": 
+		[{ 
+			"name": "genre", "isRequired": false, "options": ["New", "Old", "Best"] 
+		}]
+	},{
+		"type": "movie",
+
+		"id": "MCmovies-Turkish",
+
+		"name": "Mycima Turkish Movies",
+
+		"extra": 
+		[{ 
+			"name": "genre", "isRequired": false, "options": ["New", "Old", "Best"] 
+		}]
 	},{
 		"type": "series",
 
-		"id": "MCseries-New",
+		"id": "MCseries",
 
-		"name": "Mycima New Series"
+		"name": "Mycima All Series",
+		"extra": 
+		[{ 
+			"name": "genre", "isRequired": false, "options": ["New", "Old", "Best"] 
+		}]
 	},{
 		"type": "series",
 
-		"id": "MCseries-Top",
+		"id": "MCseries-Arabic",
 
-		"name": "Mycima Top Series"
+		"name": "Mycima Arabic Series"
 	},{
 		"type": "series",
 
-		"id": "MCseries-Best",
+		"id": "MCseries-English",
 
-		"name": "Mycima Best Series"
+		"name": "Mycima English Series"
 	},{
 		"type": "series",
 
-		"id": "MCseries-Old",
+		"id": "MCseries-Indian",
 
-		"name": "Mycima Old Series"
+		"name": "Mycima Indian Series"
+	},{
+		"type": "series",
+
+		"id": "MCseries-Turkish",
+
+		"name": "Mycima Turkish Series"
+	},{
+		"type": "series",
+
+		"id": "MCseries-Asian",
+
+		"name": "Mycima Asian Series"
 	}
 ],
 	"resources": [

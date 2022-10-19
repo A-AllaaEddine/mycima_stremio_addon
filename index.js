@@ -10,7 +10,7 @@ client = axios.create({
         });
 
 async function axiosData() {
-    const promise = await axios.get(Host);
+    const promise = await client.get(Host);
     const parsed = parser.parse(promise.data);
     //console.log(parsed.querySelectorAll('.fullClick'))
     return parsed;
@@ -22,11 +22,11 @@ async function search(type, query) {
         try {
             var URL = `${Host}/search/${query.replace(/\s/g, '+')}`;
             var res = encodeURI(URL);
-            let promise = (await axios.get(res)).data;
+            let promise = (await client.get(res)).data;
             var link = res;
         }catch(error) {
             try {
-                let promise = (await axios.get(URL)).data;
+                let promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -37,11 +37,11 @@ async function search(type, query) {
         try {
             var URL = `${Host}/search/${query.replace(/\s/g, '+')}/list/series/`;
             var res = encodeURI(URL);
-            let promise = (await axios.get(res)).data;
+            let promise = (await client.get(res)).data;
             var link = res;
         }catch(error) {
             try {
-                let promise = (await axios.get(URL)).data;
+                let promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -50,7 +50,7 @@ async function search(type, query) {
         
     }
         
-    var  promise = (await axios.get(link)).data;
+    var  promise = (await client.get(link)).data;
     let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
 
         return parsed.map( (movie) => {
@@ -74,54 +74,117 @@ async function search(type, query) {
 
 // search('series', 'game of thrones');
 
-async function catalog (type, id) {
+async function catalog (type, id, extra) {
     try {
-        let Type;
         if(type === 'movie') {
-            Type = type;
-            if (id === "MCmovies-New"){
-                var URL = `${Host}/movies`;
+            if (id === "MCmovies"){
+                var URL = `${Host}/movies/top/`;
+
+                if (extra === "New") {
+                    var URL = `${Host}/movies/`;
+                }
+                else if (extra === "Old"){
+                    var URL = `${Host}/movies/old/`;
+                }
+                else if (extra === "Best"){
+                    var URL = `${Host}/movies/best/`
+                }
             }
-            else if (id === "MCmovies-Best"){
-                var URL = `${Host}/movies/best`;
+            else if (id === "MCmovies-Arabic") {
+                var URL = `${Host}/category/افلام/6-arabic-movies-افلام-عربي/list/top/`;
+                if (extra === "New") {
+                    var URL = `${Host}/category/افلام/6-arabic-movies-افلام-عربي/`;
+                }
+                else if (extra === "Old"){
+                    var URL = `${Host}/category/افلام/6-arabic-movies-افلام-عربي/list/old/`;
+                }
+                else if (extra === "Best"){
+                    var URL = `${Host}/category/افلام/6-arabic-movies-افلام-عربي/list/best/`
+                }
             }
-            else if (id === "MCmovies-Old") {
-                var URL = `${Host}/movies/old`;
+            else if (id === "MCmovies-English") {
+                var URL = `${Host}/category/افلام/10-movies-english-افلام-اجنبي/list/top/`;
+                if (extra === "New") {
+                    var URL = `${Host}/category/افلام/10-movies-english-افلام-اجنبي/`;
+                }
+                else if (extra === "Old"){
+                    var URL = `${Host}/category/افلام/10-movies-english-افلام-اجنبي/list/old/`;
+                }
+                else if (extra === "Best"){
+                    var URL = `${Host}/category/افلام/10-movies-english-افلام-اجنبي/list/best/`
+                }
             }
-            else if (id === "MCmovies-Top") {
-                var URL = `${Host}/movies/top`;
+            else if (id === "MCmovies-Indian") {
+                var URL = `${Host}/category/افلام/افلام-هندي-indian-movies/list/top/`;
+                if (extra === "New") {
+                    var URL = `${Host}/category/افلام/افلام-هندي-indian-movies/`;
+                }
+                else if (extra === "Old"){
+                    var URL = `${Host}/category/افلام/افلام-هندي-indian-movies/list/old/`;
+                }
+                else if (extra === "Best"){
+                    var URL = `${Host}/category/افلام/افلام-هندي-indian-movies/list/best/`
+                }
+            }
+            else if (id === "MCmovies-Turkish") {
+                var URL = `${Host}/category/افلام/افلام-تركى-turkish-films/list/top/`;
+                if (extra === "New") {
+                    var URL = `${Host}/category/افلام/افلام-تركى-turkish-films/`;
+                }
+                else if (extra === "Old"){
+                    var URL = `${Host}/category/افلام/افلام-تركى-turkish-films/list/old/`;
+                }
+                else if (extra === "Best"){
+                    var URL = `${Host}/category/افلام/افلام-تركى-turkish-films/list/best/`
+                }
             }
             
             
 
         }
         else if (type === 'series') {
-            Type = type;
-            if (id === "MCseries-New"){
-                var URL = `${Host}/seriestv/new`;
-            }
-            else if (id === "MCseries-Best"){
-                var URL = `${Host}/seriestv/best`;
-            }
-            else if (id === "MCseries-Old") {
-                var URL = `${Host}/seriestv/old`;
-            }
-            else if (id === "MCseries-Top") {
+            if (id === "MCseries"){
                 var URL = `${Host}/seriestv/top`;
+
+                if (extra === "New") {
+                    var URL = `${Host}/seriestv/new/`;
+                }
+                else if (extra === "Old"){
+                    var URL = `${Host}/seriestv/old`;
+                }
+                else if (extra === "Best"){
+                    var URL = `${Host}/seriestv/best/`
+                }
+            }
+            else if (id === "MCseries-Arabic") {
+                var URL = `${Host}/category/مسلسلات/13-مسلسلات-عربيه-arabic-series/list/`;
+            }
+            else if (id === "MCseries-English") {
+                var URL = `${Host}/category/مسلسلات/5-series-english-مسلسلات-اجنبي/list/`;
+            }
+            else if (id === "MCseries-Indian") {
+                var URL = `${Host}/category/مسلسلات/9-series-indian-مسلسلات-هندية/list/`;
+            }
+            else if (id === "MCseries-Turkish") {
+                var URL = `${Host}/category/مسلسلات/8-مسلسلات-تركية-turkish-series/list/`;
+            }
+            else if (id === "MCseries-Asian") {
+                var URL = `${Host}/category/مسلسلات/مسلسلات-اسيوية/list/`;
             }
         }
         var res = encodeURI(URL);
-            let promise = (await axios.get(res)).data;
+            let promise = (await client.get(res)).data;
             let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
             return parsed.map( (movie) => {
                 let cat = {
                     id: movie.querySelector('a').rawAttributes['href'].toString(),
-                    type: Type,
-                    title : movie.querySelector('a').rawAttributes['title'].toString(),
+                    type: type,
+                    name : movie.querySelector('a').querySelector('.hasyear').rawText.toString(),
                     poster : movie.querySelector('.BG--GridItem').rawAttributes['data-lazy-style'].replace(/\(|\)|;|--image:url/g, ''),
                 }
-                if (movie.querySelector('.year')) {
-                    cat.released = movie.querySelector('.year').rawText.toString();
+
+                if (movie.querySelector('.hasyear')) {
+                    cat.releaseInfo = movie.querySelector('.year').rawText.toString();
                 }
                 return cat;
                 
@@ -140,12 +203,12 @@ async function meta (type, id) {
         try {
             var URL = id;
             var res = encodeURI(URL);
-            let promise = (await axios.get(res)).data;
+            let promise = (await client.get(res)).data;
             var link = res;
         }catch (error) {
 
             try {
-                let promise = (await axios.get(URL)).data;
+                let promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -154,16 +217,15 @@ async function meta (type, id) {
         }
     }
     if (type == 'series') {
-        let id1 = 'مسلسل';
         try {
             var URL = id;
             var res = encodeURI(URL);
-            let promise = (await axios.get(res)).data;
+            let promise = (await client.get(res)).data;
             var link = res;
         }catch (error) {
 
             try {
-                let promise = (await axios.get(URL)).data;
+                let promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -174,7 +236,7 @@ async function meta (type, id) {
     }
     
     
-    let promise = (await axios.get(link)).data;
+    let promise = (await client.get(link)).data;
     let parsed = parser.parse(promise);
 
     var description;
@@ -190,6 +252,7 @@ async function meta (type, id) {
         bg = parsed.querySelector('.separated--top').rawAttributes['style'].toString().replace(/\(|\)|;|--img:url/g, '');
     }
     
+    let year = parsed.querySelector('.Title--Content--Single-begin').querySelector('h1').querySelector('a').rawText.toString();
 
 
     let genres = parsed.querySelector('.Terms--Content--Single-begin').querySelectorAll('a')
@@ -206,7 +269,7 @@ async function meta (type, id) {
 
     let metaObj ={
         id: id,
-        title: title,
+        name: title,
         posterShape: 'poster',
         type: type,
         poster: bg,
@@ -216,6 +279,9 @@ async function meta (type, id) {
 
     if (genre) {
         metaObj.genre = genre;
+    }
+    if(year) {
+        metaObj.releaseInfo = year;
     }
 
     if (type == 'series') {
@@ -241,12 +307,12 @@ async function seasonlist(id) {
     try {
         var URL = id;
         var res = encodeURI(URL);
-        let promise = (await axios.get(res)).data;
+        let promise = (await client.get(res)).data;
         var link = res;
     }catch (error) {
 
         try {
-            let promise = (await axios.get(URL)).data;
+            let promise = (await client.get(URL)).data;
             var link = URL;
         }catch(error) {
             console.log(error);
@@ -254,7 +320,7 @@ async function seasonlist(id) {
         
     }
 
-    var promise = (await axios.get(link)).data;
+    var promise = (await client.get(link)).data;
     let parsed = parser.parse(promise);
     var seasonsEpisodes = parsed.querySelector('.Seasons--Episodes');
 
@@ -268,7 +334,7 @@ async function seasonlist(id) {
             for (i = 0; i < seasonsList.length; i++) {
                
                 var seasonUrl = seasonsList[i].rawAttributes['href'];
-                var seasonData = (await axios.get(seasonUrl)).data;
+                var seasonData = (await client.get(seasonUrl)).data;
         
         
                 let pars = parser.parse(seasonData);
@@ -278,7 +344,7 @@ async function seasonlist(id) {
         
                 for (j = 0; j < eplist.length; j++) {
                     var epUrl = eplist[j].rawAttributes['href'];
-                    var epData =  (await axios.get(epUrl)).data;
+                    var epData =  (await client.get(epUrl)).data;
                     let edDataParsed = parser.parse(epData);
         
                     let epTitle = edDataParsed.querySelector('.Title--Content--Single-begin').querySelector('h1').rawText.toString();
@@ -303,7 +369,7 @@ async function seasonlist(id) {
         
                 for (j = 0; j < eplist.length; j++) {
                     var epUrl = eplist[j].rawAttributes['href'];
-                    var epData =  (await axios.get(epUrl)).data;
+                    var epData =  (await client.get(epUrl)).data;
                     let edDataParsed = parser.parse(epData);
         
                     let epTitle = edDataParsed.querySelector('.Title--Content--Single-begin').querySelector('h1').rawText.toString();
@@ -336,12 +402,12 @@ async function stream (type, id) {
         try {
             var URL = id;
             var res = encodeURI(URL);
-            let promise = (await axios.get(res)).data;
+            let promise = (await client.get(res)).data;
             var link = res;
         }catch (error) {
 
             try {
-                let promise = (await axios.get(URL)).data;
+                let promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -349,7 +415,7 @@ async function stream (type, id) {
             
         }
 
-        let promise = (await axios.get(link)).data;
+        let promise = (await client.get(link)).data;
         let parsed = parser.parse(promise).querySelector('.List--Download--Mycima--Single').querySelectorAll('a');
 
         var streamList =  parsed.map( stream => {
@@ -367,19 +433,19 @@ async function stream (type, id) {
         try {
             var URL = id;
             var res = encodeURI(URL);
-            let promise = (await axios.get(res)).data;
+            let promise = (await client.get(res)).data;
             var link = res;
         }catch (error) {
 
             try {
-                let promise = (await axios.get(URL)).data;
+                let promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
             }
             
         }
-        let promise = (await axios.get(link)).data;
+        let promise = (await client.get(link)).data;
         let parsed = parser.parse(promise).querySelector('.List--Download--Mycima--Single').querySelectorAll('a');
 
         var epStreamList =  parsed.map( stream => {

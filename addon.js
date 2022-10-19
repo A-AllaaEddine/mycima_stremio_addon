@@ -11,6 +11,10 @@ builder.defineCatalogHandler((args) => {
 		return Promise.resolve(index.search(args.type, args.extra.search))
 		.then ((metas) => ({metas: metas}))
 	}
+	else if (args.extra.genre) {
+		return Promise.resolve(index.catalog(args.type, args.id, args.extra.genre))
+		.then ((metas) => ({metas: metas}))
+	}
 	else {
 		return Promise.resolve(index.catalog(args.type, args.id))
 		.then ((metas) => ({metas: metas}))

@@ -2,9 +2,13 @@
 	"name": "stremio-addon-mycimaaddon",
 	"version": "0.0.1",
 	"description": "an Addon for MyCima.fun",
-	"scripts": {
-		"start": "node server.js"
-	},
+	"scripts":  {
+		"start": "node server.js",
+		"dev": "nodemon server.js"
+	  },
+	  "devDependencies": {
+		"nodemon": "latest"
+	  },
 	"dependencies": {
 		"axios": "^0.27.2",
 		"fast-html-parser": "^1.0.1",
