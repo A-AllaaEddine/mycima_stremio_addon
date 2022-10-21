@@ -4,17 +4,12 @@ const Host = 'https://mycimaa.fun';
 
 
 client = axios.create({
+            timeout: 4000,
             headers: {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; rv:91.0) Gecko/20100101 Firefox/91.0"
             }
         });
 
-async function axiosData() {
-    const promise = await client.get(Host);
-    const parsed = parser.parse(promise.data);
-    //console.log(parsed.querySelectorAll('.fullClick'))
-    return parsed;
-} 
 
 async function search(type, query) {
 
@@ -49,8 +44,13 @@ async function search(type, query) {
         }
         
     }
-        
-    var  promise = (await client.get(link)).data;
+
+    try {
+        var promise = (await client.get(link)).data;
+    }catch (error) {
+        console.log(error);
+    }    
+
     let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
 
         return parsed.map( (movie) => {
@@ -235,8 +235,12 @@ async function meta (type, id) {
         
     }
     
-    
-    let promise = (await client.get(link)).data;
+    try {
+        let promise = (await client.get(link)).data;
+    }catch(error) {
+        console.log(error)
+    }
+
     let parsed = parser.parse(promise);
 
     var description;
@@ -319,8 +323,12 @@ async function seasonlist(id) {
         }
         
     }
+    try {
+        var promise = (await client.get(link)).data;
+    }catch(error){
+        console.log(error);
+    }
 
-    var promise = (await client.get(link)).data;
     let parsed = parser.parse(promise);
     var seasonsEpisodes = parsed.querySelector('.Seasons--Episodes');
 
@@ -415,7 +423,12 @@ async function stream (type, id) {
             
         }
 
-        let promise = (await client.get(link)).data;
+        try {
+            let promise = (await client.get(link)).data;
+        }catch(error) {
+            console.log(error);
+        }
+
         let parsed = parser.parse(promise).querySelector('.List--Download--Mycima--Single').querySelectorAll('a');
 
         var streamList =  parsed.map( stream => {
@@ -445,7 +458,12 @@ async function stream (type, id) {
             }
             
         }
-        let promise = (await client.get(link)).data;
+        try {
+            let promise = (await client.get(link)).data;
+        }catch(error) {
+            console.log(error);
+        }
+
         let parsed = parser.parse(promise).querySelector('.List--Download--Mycima--Single').querySelectorAll('a');
 
         var epStreamList =  parsed.map( stream => {
@@ -467,7 +485,7 @@ async function stream (type, id) {
 
 
 module.exports = {
-    axiosData,
+    // axiosData,
     search,
     catalog,
     meta,
