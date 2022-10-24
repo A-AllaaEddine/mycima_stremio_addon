@@ -17,11 +17,11 @@ async function search(type, query) {
         try {
             var URL = `${Host}/search/${query.replace(/\s/g, '+')}`;
             var res = encodeURI(URL);
-            let promise = (await client.get(res)).data;
+            var promise = (await client.get(res)).data;
             var link = res;
         }catch(error) {
             try {
-                let promise = (await client.get(URL)).data;
+                var promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -32,11 +32,11 @@ async function search(type, query) {
         try {
             var URL = `${Host}/search/${query.replace(/\s/g, '+')}/list/series/`;
             var res = encodeURI(URL);
-            let promise = (await client.get(res)).data;
+            var promise = (await client.get(res)).data;
             var link = res;
         }catch(error) {
             try {
-                let promise = (await client.get(URL)).data;
+                var promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -173,7 +173,7 @@ async function catalog (type, id, extra) {
             }
         }
         var res = encodeURI(URL);
-            let promise = (await client.get(res)).data;
+            var promise = (await client.get(res)).data;
             let parsed = parser.parse(promise).querySelector('.Grid--MycimaPosts').querySelectorAll('.GridItem');
             return parsed.map( (movie) => {
                 let cat = {
@@ -203,12 +203,12 @@ async function meta (type, id) {
         try {
             var URL = id;
             var res = encodeURI(URL);
-            let promise = (await client.get(res)).data;
+            var promise = (await client.get(res)).data;
             var link = res;
         }catch (error) {
 
             try {
-                let promise = (await client.get(URL)).data;
+                var promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -220,12 +220,12 @@ async function meta (type, id) {
         try {
             var URL = id;
             var res = encodeURI(URL);
-            let promise = (await client.get(res)).data;
+            var promise = (await client.get(res)).data;
             var link = res;
         }catch (error) {
 
             try {
-                let promise = (await client.get(URL)).data;
+                var promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -236,7 +236,7 @@ async function meta (type, id) {
     }
     
     try {
-        let promise = (await client.get(link)).data;
+        var promise = (await client.get(link)).data;
     }catch(error) {
         console.log(error)
     }
@@ -311,12 +311,12 @@ async function seasonlist(id) {
     try {
         var URL = id;
         var res = encodeURI(URL);
-        let promise = (await client.get(res)).data;
+        var promise = (await client.get(res)).data;
         var link = res;
     }catch (error) {
 
         try {
-            let promise = (await client.get(URL)).data;
+            var promise = (await client.get(URL)).data;
             var link = URL;
         }catch(error) {
             console.log(error);
@@ -410,12 +410,12 @@ async function stream (type, id) {
         try {
             var URL = id;
             var res = encodeURI(URL);
-            let promise = (await client.get(res)).data;
+            var promise = (await client.get(res)).data;
             var link = res;
         }catch (error) {
 
             try {
-                let promise = (await client.get(URL)).data;
+                var promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -424,7 +424,7 @@ async function stream (type, id) {
         }
 
         try {
-            let promise = (await client.get(link)).data;
+            var promise = (await client.get(link)).data;
         }catch(error) {
             console.log(error);
         }
@@ -446,12 +446,12 @@ async function stream (type, id) {
         try {
             var URL = id;
             var res = encodeURI(URL);
-            let promise = (await client.get(res)).data;
+            var promise = (await client.get(res)).data;
             var link = res;
         }catch (error) {
 
             try {
-                let promise = (await client.get(URL)).data;
+                var promise = (await client.get(URL)).data;
                 var link = URL;
             }catch(error) {
                 console.log(error);
@@ -459,7 +459,7 @@ async function stream (type, id) {
             
         }
         try {
-            let promise = (await client.get(link)).data;
+            var promise = (await client.get(link)).data;
         }catch(error) {
             console.log(error);
         }
